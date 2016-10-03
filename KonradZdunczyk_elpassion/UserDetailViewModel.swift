@@ -53,5 +53,21 @@ class UserDetailViewModel {
                 }
             }
         }
+
+        ApiHelper.starsNumber(
+            ofUser: user,
+            successHandler: { [weak self] (starsNumber) in
+                self?.starsNumber.value = starsNumber
+            }, failureHandler: { [weak self] (error, respond) in
+                self?.starsNumber.value = 0
+            })
+
+        ApiHelper.followersNumber(
+            ofUser: user,
+            successHandler: { [weak self] (fallowersNumber) in
+                self?.followersNumber.value = fallowersNumber
+            }, failureHandler: { [weak self] (error, respond) in
+                self?.followersNumber.value = 0
+            })
     }
 }
