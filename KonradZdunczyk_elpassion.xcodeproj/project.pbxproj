@@ -95,6 +95,14 @@
 			name = ViewModels;
 			sourceTree = "<group>";
 		};
+		175DA9B21DA2F63D00C72CBE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1768C07C1DA2E161004B9988 /* UserRepoCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		1768C0481DA2DD57004B9988 = {
 			isa = PBXGroup;
 			children = (
@@ -140,7 +148,7 @@
 			children = (
 				1768C0741DA2DE46004B9988 /* SearchViewController.swift */,
 				1768C0771DA2DE78004B9988 /* Search.storyboard */,
-				1768C07C1DA2E161004B9988 /* UserRepoCell.swift */,
+				175DA9B21DA2F63D00C72CBE /* Views */,
 				1768C0921DA2E742004B9988 /* ViewModels */,
 			);
 			name = Search;

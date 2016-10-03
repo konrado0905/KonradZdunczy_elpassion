@@ -98,6 +98,12 @@ class SearchViewModel {
         return nil
     }
 
+    func getUserDetailViewModel(forUserId userId: Int) -> UserDetailViewModel? {
+        guard let user = users.value.filter({ $0.id == userId }).first else { return nil }
+
+        return UserDetailViewModel(user: user)
+    }
+
     private func requestErrorHandler(response: DataResponse<Any>) {
         var message = "Request error"
         if let data = response.data,

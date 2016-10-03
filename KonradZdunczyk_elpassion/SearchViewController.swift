@@ -48,6 +48,22 @@ class SearchViewController: UIViewController {
             }
             .addDisposableTo(disposeBag)
 
+        tableView.rx
+            .itemSelected
+            .bindNext({ [unowned self] (indexPath) in
+                self.tableView.deselectRow(at: indexPath, animated: false)
+                guard indexPath.section == SearchViewModel.Consts.UserSectionNumber else { return }
+                guard let cell = self.tableView.cellForRow(at: indexPath) as? UserRepoCell else { return }
+
+                if let userId = cell.cellViewModel?.id,
+                    let userDetailViewModel = self.searchViewModel.getUserDetailViewModel(forUserId: userId),
+                    let vc = UIStoryboard(name: "UserDetail", bundle: nil).instantiateInitialViewController() as? UserDetailViewController {
+                    vc.userDetailViewModel = userDetailViewModel
+                    self.show(vc, sender: self)
+                }
+            })
+            .addDisposableTo(disposeBag)
+
         searchViewModel
             .rx_repoCellViewModels
             .drive(onNext: { [unowned self] (repos) in
