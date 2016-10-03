@@ -16,6 +16,7 @@ class SearchViewController: UIViewController {
         didSet {
             tableView.register(UserRepoCell.self, forCellReuseIdentifier: "cell")
             tableView.dataSource = self
+            tableView.delegate = self
             tableView.keyboardDismissMode = .onDrag
         }
     }
@@ -74,7 +75,7 @@ class SearchViewController: UIViewController {
         }
     }
 }
-
+// MARK: UITableViewDataSource
 extension SearchViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -99,5 +100,19 @@ extension SearchViewController: UITableViewDataSource {
         }
 
         return cell
+    }
+}
+
+// MARK: UITableViewDelegate
+extension SearchViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case SearchViewModel.Consts.ReposSectionNumber:
+            return "Repos"
+        case SearchViewModel.Consts.UserSectionNumber:
+            return "Users"
+        default:
+            return nil
+        }
     }
 }
