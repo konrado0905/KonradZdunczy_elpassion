@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		175DA9B11DA2F17600C72CBE /* UserDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175DA9B01DA2F17600C72CBE /* UserDetailViewModel.swift */; };
 		1768C0551DA2DD57004B9988 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1768C0541DA2DD57004B9988 /* AppDelegate.swift */; };
 		1768C05C1DA2DD57004B9988 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1768C05B1DA2DD57004B9988 /* Assets.xcassets */; };
 		1768C05F1DA2DD57004B9988 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1768C05D1DA2DD57004B9988 /* LaunchScreen.storyboard */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		175DA9B01DA2F17600C72CBE /* UserDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewModel.swift; sourceTree = "<group>"; };
 		1768C0511DA2DD57004B9988 /* KonradZdunczyk_elpassion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KonradZdunczyk_elpassion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1768C0541DA2DD57004B9988 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1768C05B1DA2DD57004B9988 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -85,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		175DA9AF1DA2F14A00C72CBE /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				175DA9B01DA2F17600C72CBE /* UserDetailViewModel.swift */,
+			);
+			name = ViewModels;
+			sourceTree = "<group>";
+		};
 		1768C0481DA2DD57004B9988 = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +199,7 @@
 		1768C0931DA2EF03004B9988 /* UserDetail */ = {
 			isa = PBXGroup;
 			children = (
+				175DA9AF1DA2F14A00C72CBE /* ViewModels */,
 				1768C0941DA2EF22004B9988 /* UserDetail.storyboard */,
 				1768C0961DA2EF84004B9988 /* UserDetailViewController.swift */,
 			);
@@ -371,6 +382,7 @@
 			files = (
 				1768C08D1DA2E5BB004B9988 /* SearchViewModel.swift in Sources */,
 				1768C0871DA2E2B6004B9988 /* Repository.swift in Sources */,
+				175DA9B11DA2F17600C72CBE /* UserDetailViewModel.swift in Sources */,
 				1768C0971DA2EF84004B9988 /* UserDetailViewController.swift in Sources */,
 				1768C08B1DA2E4F0004B9988 /* SearchResult.swift in Sources */,
 				1768C07F1DA2E1A2004B9988 /* CellViewModelProtocol.swift in Sources */,
