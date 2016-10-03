@@ -10,9 +10,9 @@ import Foundation
 import ObjectMapper
 
 struct SearchResult<T: Mappable>: Mappable {
-    var total_count: Int!
-    var incomplete_results: Bool!
-    var items: [T]!
+    private(set) var total_count: Int!
+    private(set) var incomplete_results: Bool!
+    private(set) var items: [T]!
 
     init?(map: Map) { }
 

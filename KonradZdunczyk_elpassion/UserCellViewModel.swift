@@ -12,7 +12,7 @@ import UIKit
 struct UserCellViewModel: CellViewModel {
     let id: Int
     let title: String
-    var accessoryType: UITableViewCellAccessoryType = .disclosureIndicator
+    let accessoryType: UITableViewCellAccessoryType = .disclosureIndicator
 
     init(user: User) {
         id = user.id

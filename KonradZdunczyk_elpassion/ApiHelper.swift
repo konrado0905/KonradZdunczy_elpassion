@@ -11,8 +11,8 @@ import ObjectMapper
 
 enum ApiHelper {
     static func searchUsers(withName name: String,
-                           successHandler: @escaping (([User]) -> ()),
-                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                            successHandler: @escaping (([User]) -> ()),
+                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         Alamofire
             .request(GitHubRouter.searchUser(name: name))
             .validate(statusCode: 200..<300)
@@ -35,8 +35,8 @@ enum ApiHelper {
     }
 
     static func searchRepos(withName name: String,
-                           successHandler: @escaping (([Repository]) -> ()),
-                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                            successHandler: @escaping (([Repository]) -> ()),
+                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         Alamofire
             .request(GitHubRouter.searchRepo(name: name))
             .validate(statusCode: 200..<300)
@@ -59,8 +59,8 @@ enum ApiHelper {
     }
 
     static func starsNumber(ofUser user: User,
-                           successHandler: @escaping ((Int) -> ()),
-                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                            successHandler: @escaping ((Int) -> ()),
+                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         let request = Alamofire.request(GitHubRouter.usersStars(user: user))
         totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: failureHandler)
     }
@@ -109,8 +109,8 @@ enum ApiHelper {
     }
 
     private static func objectsNumberAtPage(withRequest request: DataRequest,
-                                           successHandler: @escaping ((Int, DataResponse<Data>) -> ()),
-                                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                                            successHandler: @escaping ((Int, DataResponse<Data>) -> ()),
+                                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         func numberOfObjects(fromResponse response: DataResponse<Data>) -> Int {
             guard let jsonData = response.result.value,
                 let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers),
@@ -142,8 +142,8 @@ enum ApiHelper {
     }
 
     private static func totalObjectsNumber(withRequest request: DataRequest,
-                                          successHandler: @escaping ((Int) -> ()),
-                                          failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                                           successHandler: @escaping ((Int) -> ()),
+                                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         objectsNumberAtPage(
             withRequest: request,
             successHandler: { (numberOfObjectsAtFirstPage, response) in
