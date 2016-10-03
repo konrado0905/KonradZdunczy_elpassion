@@ -9,8 +9,8 @@
 import Alamofire
 import ObjectMapper
 
-class ApiHelper {
-    class func searchUsers(withName name: String,
+enum ApiHelper {
+    static func searchUsers(withName name: String,
                            successHandler: @escaping (([User]) -> ()),
                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         Alamofire
@@ -34,7 +34,7 @@ class ApiHelper {
             }
     }
 
-    class func searchRepos(withName name: String,
+    static func searchRepos(withName name: String,
                            successHandler: @escaping (([Repository]) -> ()),
                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         Alamofire
@@ -58,21 +58,21 @@ class ApiHelper {
             }
     }
 
-    class func starsNumber(ofUser user: User,
+    static func starsNumber(ofUser user: User,
                            successHandler: @escaping ((Int) -> ()),
                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         let request = Alamofire.request(GitHubRouter.usersStars(user: user))
         totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: failureHandler)
     }
 
-    class func followersNumber(ofUser user: User,
+    static func followersNumber(ofUser user: User,
                                successHandler: @escaping ((Int) -> ()),
                                failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         let request = Alamofire.request(GitHubRouter.usersFallowers(user: user))
         totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: failureHandler)
     }
 
-    private class func getPageNumber(fromUrlString urlString: String) -> Int? {
+    private static func getPageNumber(fromUrlString urlString: String) -> Int? {
         let urlComponents = NSURLComponents(string: urlString)
         if let pageNumberString = urlComponents?.queryItems?.filter({ $0.name == "page"}).first?.value {
             return Int(pageNumberString)
@@ -81,7 +81,7 @@ class ApiHelper {
         return nil
     }
 
-    private class func getPagesInfo(fromResponse response: HTTPURLResponse?) -> (numberOfPages: Int, lastPageLink: URL)? {
+    private static func getPagesInfo(fromResponse response: HTTPURLResponse?) -> (numberOfPages: Int, lastPageLink: URL)? {
         guard let response = response, let linksString = response.allHeaderFields["Link"] as? String else { return nil }
         guard let linksRegex = try? NSRegularExpression(pattern: "<.+?>", options: []) else { return nil }
 
@@ -108,7 +108,7 @@ class ApiHelper {
         return nil
     }
 
-    private class func objectsNumberAtPage(withRequest request: DataRequest,
+    private static func objectsNumberAtPage(withRequest request: DataRequest,
                                            successHandler: @escaping ((Int, DataResponse<Data>) -> ()),
                                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         func numberOfObjects(fromResponse response: DataResponse<Data>) -> Int {
@@ -141,7 +141,7 @@ class ApiHelper {
         }
     }
 
-    private class func totalObjectsNumber(withRequest request: DataRequest,
+    private static func totalObjectsNumber(withRequest request: DataRequest,
                                           successHandler: @escaping ((Int) -> ()),
                                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
         objectsNumberAtPage(
