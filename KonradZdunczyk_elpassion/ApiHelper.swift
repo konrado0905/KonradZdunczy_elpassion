@@ -57,4 +57,113 @@ class ApiHelper {
                 }
             }
     }
+
+    class func starsNumber(ofUser user: User,
+                           successHandler: @escaping ((Int) -> ()),
+                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+        let request = Alamofire.request(GitHubRouter.usersStars(user: user))
+        totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: failureHandler)
+    }
+
+    class func followersNumber(ofUser user: User,
+                               successHandler: @escaping ((Int) -> ()),
+                               failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+        let request = Alamofire.request(GitHubRouter.usersFallowers(user: user))
+        totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: failureHandler)
+    }
+
+    private class func getPageNumber(fromUrlString urlString: String) -> Int? {
+        let urlComponents = NSURLComponents(string: urlString)
+        if let pageNumberString = urlComponents?.queryItems?.filter({ $0.name == "page"}).first?.value {
+            return Int(pageNumberString)
+        }
+
+        return nil
+    }
+
+    private class func getPagesInfo(fromResponse response: HTTPURLResponse?) -> (numberOfPages: Int, lastPageLink: URL)? {
+        guard let response = response, let linksString = response.allHeaderFields["Link"] as? String else { return nil }
+        guard let linksRegex = try? NSRegularExpression(pattern: "<.+?>", options: []) else { return nil }
+
+        let results  = linksRegex.matches(in: linksString,
+                                          options: [],
+                                          range: NSRange(location: 0,
+                                                         length: linksString.characters.count))
+        let linksNSString = linksString as NSString
+        let resultsArray = results.map {
+            linksNSString
+                .substring(with: $0.range)
+                .replacingOccurrences(of: "<", with: "")
+                .replacingOccurrences(of: ">", with: "")
+        }
+
+        guard resultsArray.count == 2 else { return nil }
+
+        if let lastPageUrlString = resultsArray.last,
+            let lastPageUrl = URL(string: lastPageUrlString),
+            let numberOfPages = getPageNumber(fromUrlString: lastPageUrlString) {
+            return (numberOfPages, lastPageUrl)
+        }
+
+        return nil
+    }
+
+    private class func objectsNumberAtPage(withRequest request: DataRequest,
+                                           successHandler: @escaping ((Int, DataResponse<Data>) -> ()),
+                                           failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+        func numberOfObjects(fromResponse response: DataResponse<Data>) -> Int {
+            guard let jsonData = response.result.value,
+                let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers),
+                let jsonArray = jsonObject as? [[String: Any]] else {
+                    return 0
+            }
+
+            return jsonArray.count
+        }
+
+        request
+            .validate(statusCode: 200..<300)
+            .responseData(queue: DispatchQueue.global(qos: .background)) { (response) in
+                switch response.result {
+                case .success:
+                    successHandler(numberOfObjects(fromResponse: response), response)
+                default:
+                    break
+                }
+            }
+            .responseJSON(queue: DispatchQueue.global(qos: .background)) { (response) in
+                switch response.result {
+                case .failure(let error):
+                    failureHandler(error, response)
+                default:
+                    break
+                }
+        }
+    }
+
+    private class func totalObjectsNumber(withRequest request: DataRequest,
+                                          successHandler: @escaping ((Int) -> ()),
+                                          failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+        objectsNumberAtPage(
+            withRequest: request,
+            successHandler: { (numberOfObjectsAtFirstPage, response) in
+                if let pagesInfo = ApiHelper.getPagesInfo(fromResponse: response.response), pagesInfo.numberOfPages > 1 {
+                    let multiplier = pagesInfo.numberOfPages - 1
+                    let request = Alamofire.request(pagesInfo.lastPageLink,
+                                                    method: .get,
+                                                    parameters: nil,
+                                                    encoding: URLEncoding.queryString,
+                                                    headers: nil)
+
+                    objectsNumberAtPage(
+                        withRequest: request,
+                        successHandler: { (numberOfObjectsAtLastPage, response) in
+                            let numberOfObjectsTotal = numberOfObjectsAtFirstPage * multiplier + numberOfObjectsAtLastPage
+                            successHandler(numberOfObjectsTotal)
+                        }, failureHandler: failureHandler)
+                } else {
+                    successHandler(numberOfObjectsAtFirstPage)
+                }
+            }, failureHandler: failureHandler)
+    }
 }
