@@ -10,54 +10,6 @@ import XCTest
 import RxCocoa
 import RxSwift
 
-extension ApiHelperProtocol {
-    static func searchUsers(withName name: String,
-                            successHandler: @escaping (([User]) -> ()),
-                            failureHandler: @escaping (NSError) -> ()) { }
-
-    static func searchRepos(withName name: String,
-                            successHandler: @escaping (([Repository]) -> ()),
-                            failureHandler: @escaping (NSError) -> ()) { }
-
-    static func starsNumber(ofUser user: User,
-                            successHandler: @escaping ((Int) -> ()),
-                            failureHandler: @escaping (NSError) -> ()) { }
-
-    static func followersNumber(ofUser user: User,
-                                successHandler: @escaping ((Int) -> ()),
-                                failureHandler: @escaping (NSError) -> ()) { }
-}
-
-enum FakeSuccessApiHelper: ApiHelperProtocol {
-    static func starsNumber(ofUser user: User,
-                            successHandler: @escaping ((Int) -> ()),
-                            failureHandler: @escaping (NSError) -> ()) {
-        successHandler(7)
-    }
-
-    static func followersNumber(ofUser user: User,
-                                successHandler: @escaping ((Int) -> ()),
-                                failureHandler: @escaping (NSError) -> ()) {
-        successHandler(10)
-    }
-}
-
-enum FakeFailureApiHelper: ApiHelperProtocol {
-    static func starsNumber(ofUser user: User,
-                            successHandler: @escaping ((Int) -> ()),
-                            failureHandler: @escaping (NSError) -> ()) {
-
-
-        failureHandler(NSError())
-    }
-
-    static func followersNumber(ofUser user: User,
-                                successHandler: @escaping ((Int) -> ()),
-                                failureHandler: @escaping (NSError) -> ()) {
-        failureHandler(NSError())
-    }
-}
-
 class UserDetailViewModelTest: XCTestCase {
     var disposeBag: DisposeBag!
     var userDetailVM: UserDetailViewModel!
@@ -75,7 +27,7 @@ class UserDetailViewModelTest: XCTestCase {
         userDetailVM = nil
     }
 
-    func testUserNameText() {
+    func testUserName_TextValue() {
         let user = User(id: 1, login: "User", avatar_url: nil)
         userDetailVM = UserDetailViewModel(user: user, apiHelperType: FakeSuccessApiHelper.self)
 
@@ -87,9 +39,11 @@ class UserDetailViewModelTest: XCTestCase {
             .addDisposableTo(disposeBag)
     }
 
-    func testFollowersTextOnSuccess() {
+    func testFollowersText_ValueOnSuccess() {
         let user = User(id: 1, login: "User", avatar_url: nil)
         userDetailVM = UserDetailViewModel(user: user, apiHelperType: FakeSuccessApiHelper.self)
+
+        Thread.sleep(forTimeInterval: 0.5)
 
         userDetailVM
             .rx_followersText
@@ -99,9 +53,11 @@ class UserDetailViewModelTest: XCTestCase {
             .addDisposableTo(disposeBag)
     }
 
-    func testFollowersTextOnFailure() {
+    func testFollowersText_ValueOnFailure() {
         let user = User(id: 1, login: "User", avatar_url: nil)
         userDetailVM = UserDetailViewModel(user: user, apiHelperType: FakeFailureApiHelper.self)
+
+        Thread.sleep(forTimeInterval: 0.5)
 
         userDetailVM
             .rx_followersText
@@ -111,9 +67,11 @@ class UserDetailViewModelTest: XCTestCase {
             .addDisposableTo(disposeBag)
     }
 
-    func testStarsTextOnSuccess() {
+    func testStarsText_ValueOnSuccess() {
         let user = User(id: 1, login: "User", avatar_url: nil)
         userDetailVM = UserDetailViewModel(user: user, apiHelperType: FakeSuccessApiHelper.self)
+
+        Thread.sleep(forTimeInterval: 0.5)
 
         userDetailVM
             .rx_starsText
@@ -123,9 +81,11 @@ class UserDetailViewModelTest: XCTestCase {
             .addDisposableTo(disposeBag)
     }
 
-    func testStarsTextOnFailure() {
+    func testStarsText_ValueOnFailure() {
         let user = User(id: 1, login: "User", avatar_url: nil)
         userDetailVM = UserDetailViewModel(user: user, apiHelperType: FakeFailureApiHelper.self)
+
+        Thread.sleep(forTimeInterval: 0.5)
 
         userDetailVM
             .rx_starsText
