@@ -66,14 +66,14 @@ class SearchViewModel {
 
                 ApiHelper.searchUsers(withName: queryText, successHandler: { (users) in
                     self.users.value = users.sorted { $0.id < $1.id }
-                }, failureHandler: { (error, response) in
-                    self.requestErrorHandler(response: response)
+                }, failureHandler: { (error) in
+                    self.errorHandler(error)
                 })
 
                 ApiHelper.searchRepos(withName: queryText, successHandler: { (repos) in
                     self.repos.value = repos.sorted { $0.id < $1.id }
-                }, failureHandler: { (error, response) in
-                    self.requestErrorHandler(response: response)
+                }, failureHandler: { (error) in
+                    self.errorHandler(error)
                 })
             }
             .addDisposableTo(disposeBag)
@@ -102,21 +102,5 @@ class SearchViewModel {
         guard let user = users.value.filter({ $0.id == userId }).first else { return nil }
 
         return UserDetailViewModel(user: user)
-    }
-
-    private func requestErrorHandler(response: DataResponse<Any>) {
-        var message = "Request error"
-        if let data = response.data,
-            let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
-            let jsonDict = jsonObject as? [String : String],
-            let msg = jsonDict["message"] {
-            message = msg
-        }
-
-        let domain = "RequestFailure"
-        let statusCode = response.response?.statusCode ?? -1
-        let error = NSError(domain: domain, code: statusCode, userInfo: [NSLocalizedDescriptionKey : message])
-        
-        self.errorHandler(error)
     }
 }

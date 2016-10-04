@@ -9,10 +9,28 @@
 import Alamofire
 import ObjectMapper
 
-enum ApiHelper {
+protocol ApiHelperProtocol {
     static func searchUsers(withName name: String,
-                            successHandler: @escaping (([User]) -> ()),
-                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                            successHandler: @escaping ([User]) -> (),
+                            failureHandler: @escaping (NSError) -> ())
+
+    static func searchRepos(withName name: String,
+                            successHandler: @escaping ([Repository]) -> (),
+                            failureHandler: @escaping (NSError) -> ())
+
+    static func starsNumber(ofUser user: User,
+                            successHandler: @escaping (Int) -> (),
+                            failureHandler: @escaping (NSError) -> ())
+
+    static func followersNumber(ofUser user: User,
+                                successHandler: @escaping (Int) -> (),
+                                failureHandler: @escaping (NSError) -> ())
+}
+
+enum ApiHelper: ApiHelperProtocol {
+    static func searchUsers(withName name: String,
+                            successHandler: @escaping ([User]) -> (),
+                            failureHandler: @escaping (NSError) -> ()) {
         Alamofire
             .request(GitHubRouter.searchUser(name: name))
             .validate(statusCode: 200..<300)
@@ -28,15 +46,15 @@ enum ApiHelper {
                     }
 
                     successHandler(users)
-                case .failure(let error):
-                    failureHandler(error, response)
+                case .failure:
+                    failureHandler(getError(fromResponse: response))
                 }
             }
     }
 
     static func searchRepos(withName name: String,
-                            successHandler: @escaping (([Repository]) -> ()),
-                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                            successHandler: @escaping ([Repository]) -> (),
+                            failureHandler: @escaping (NSError) -> ()) {
         Alamofire
             .request(GitHubRouter.searchRepo(name: name))
             .validate(statusCode: 200..<300)
@@ -52,24 +70,42 @@ enum ApiHelper {
                     }
 
                     successHandler(repos)
-                case .failure(let error):
-                    failureHandler(error, response)
+                case .failure:
+                    failureHandler(getError(fromResponse: response))
                 }
             }
     }
 
     static func starsNumber(ofUser user: User,
-                            successHandler: @escaping ((Int) -> ()),
-                            failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                            successHandler: @escaping (Int) -> (),
+                            failureHandler: @escaping (NSError) -> ()) {
         let request = Alamofire.request(GitHubRouter.usersStars(user: user))
-        totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: failureHandler)
+        totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: { (_, response) in
+            failureHandler(getError(fromResponse: response))
+        })
     }
 
     static func followersNumber(ofUser user: User,
-                               successHandler: @escaping ((Int) -> ()),
-                               failureHandler: @escaping ((Error, DataResponse<Any>) -> ())) {
+                               successHandler: @escaping (Int) -> (),
+                               failureHandler: @escaping (NSError) -> ()) {
         let request = Alamofire.request(GitHubRouter.usersFallowers(user: user))
-        totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: failureHandler)
+        totalObjectsNumber(withRequest: request, successHandler: successHandler, failureHandler: { (_, response) in
+            failureHandler(getError(fromResponse: response))
+        })
+    }
+
+    private static func getError(fromResponse response: DataResponse<Any>) -> NSError {
+        var message = "Request error"
+        if let data = response.data,
+            let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+            let jsonDict = jsonObject as? [String : String],
+            let msg = jsonDict["message"] {
+            message = msg
+        }
+
+        let domain = "RequestFailure"
+        let statusCode = response.response?.statusCode ?? -1
+        return NSError(domain: domain, code: statusCode, userInfo: [NSLocalizedDescriptionKey : message])
     }
 
     private static func getPageNumber(fromUrlString urlString: String) -> Int? {

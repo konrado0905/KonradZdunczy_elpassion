@@ -24,7 +24,7 @@ class UserDetailViewModel {
     private let followersNumber = Variable<Int>(0)
     private let avatar = Variable<UIImage?>(nil)
 
-    init(user: User) {
+    init(user: User, apiHelperType: ApiHelperProtocol.Type = ApiHelper.self) {
         self.user = user
 
         rx_userName = Observable
@@ -54,19 +54,19 @@ class UserDetailViewModel {
             }
         }
 
-        ApiHelper.starsNumber(
+        apiHelperType.starsNumber(
             ofUser: user,
             successHandler: { [weak self] (starsNumber) in
                 self?.starsNumber.value = starsNumber
-            }, failureHandler: { [weak self] (error, respond) in
+            }, failureHandler: { [weak self] (error) in
                 self?.starsNumber.value = 0
             })
 
-        ApiHelper.followersNumber(
+        apiHelperType.followersNumber(
             ofUser: user,
             successHandler: { [weak self] (fallowersNumber) in
                 self?.followersNumber.value = fallowersNumber
-            }, failureHandler: { [weak self] (error, respond) in
+            }, failureHandler: { [weak self] (error) in
                 self?.followersNumber.value = 0
             })
     }
