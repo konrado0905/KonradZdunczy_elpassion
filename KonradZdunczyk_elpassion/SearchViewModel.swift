@@ -59,8 +59,8 @@ class SearchViewModel {
 
         query
             .observeOn(ConcurrentDispatchQueueScheduler(globalConcurrentQueueQOS: .background))
-            .subscribe { [unowned self] (queryText) in
-                guard let queryText = queryText.element, queryText.characters.count > 0 else {
+            .subscribe(onNext: { [unowned self] (queryText) in
+                guard queryText.characters.count > 0 else {
                     self.repos.value = []
                     self.users.value = []
 
@@ -78,7 +78,7 @@ class SearchViewModel {
                 }, failureHandler: { (error) in
                     self.errorHandler(error)
                 })
-            }
+            })
             .addDisposableTo(disposeBag)
     }
 
