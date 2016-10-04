@@ -15,6 +15,11 @@ struct Repository: Mappable {
 
     init?(map: Map) { }
 
+    init(id: Int, fullName: String) {
+        self.id = id
+        self.fullName = fullName
+    }
+
     mutating func mapping(map: Map) {
         id <- map["id"]
         fullName <- map["full_name"]

@@ -36,9 +36,12 @@ class SearchViewModel {
         return users.value.count
     }
 
-    init(withQueryOnservable queryObservable: Observable<String>, errorHandler: @escaping ErrorHandlerType) {
+    private let apiHelperType: ApiHelperProtocol.Type
+
+    init(withQueryOnservable queryObservable: Observable<String>, apiHelperType: ApiHelperProtocol.Type, errorHandler: @escaping ErrorHandlerType) {
         self.query = queryObservable
         self.errorHandler = errorHandler
+        self.apiHelperType = apiHelperType
 
         rx_repoCellViewModels = repos
             .asObservable()
@@ -64,13 +67,13 @@ class SearchViewModel {
                     return
                 }
 
-                ApiHelper.searchUsers(withName: queryText, successHandler: { (users) in
+                apiHelperType.searchUsers(withName: queryText, successHandler: { (users) in
                     self.users.value = users.sorted { $0.id < $1.id }
                 }, failureHandler: { (error) in
                     self.errorHandler(error)
                 })
 
-                ApiHelper.searchRepos(withName: queryText, successHandler: { (repos) in
+                apiHelperType.searchRepos(withName: queryText, successHandler: { (repos) in
                     self.repos.value = repos.sorted { $0.id < $1.id }
                 }, failureHandler: { (error) in
                     self.errorHandler(error)
@@ -101,6 +104,6 @@ class SearchViewModel {
     func getUserDetailViewModel(forUserId userId: Int) -> UserDetailViewModel? {
         guard let user = users.value.filter({ $0.id == userId }).first else { return nil }
 
-        return UserDetailViewModel(user: user)
+        return UserDetailViewModel(user: user, apiHelperType: apiHelperType)
     }
 }

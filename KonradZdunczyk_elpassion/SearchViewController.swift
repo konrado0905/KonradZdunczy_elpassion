@@ -39,7 +39,7 @@ class SearchViewController: UIViewController {
     }
 
     func setupRx() {
-        searchViewModel = SearchViewModel(withQueryOnservable: rx_searchBarText, errorHandler: showAlert)
+        searchViewModel = SearchViewModel(withQueryOnservable: rx_searchBarText, apiHelperType: ApiHelper.self, errorHandler: showAlert)
 
         searchBar.rx
             .searchButtonClicked

@@ -12,9 +12,15 @@ import ObjectMapper
 struct User: Mappable {
     private(set) var id: Int!
     private(set) var login: String!
-    private(set) var avatar_url: URL!
+    private(set) var avatar_url: URL?
 
     init?(map: Map) { }
+
+    init(id: Int, login: String, avatar_url: URL?) {
+        self.id = id
+        self.login = login
+        self.avatar_url = avatar_url
+    }
 
     mutating func mapping(map: Map) {
         id <- map["id"]

@@ -24,7 +24,7 @@ class UserDetailViewModel {
     private let followersNumber = Variable<Int>(0)
     private let avatar = Variable<UIImage?>(nil)
 
-    init(user: User, apiHelperType: ApiHelperProtocol.Type = ApiHelper.self) {
+    init(user: User, apiHelperType: ApiHelperProtocol.Type) {
         self.user = user
 
         rx_userName = Observable

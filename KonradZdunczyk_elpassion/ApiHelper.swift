@@ -9,24 +9,6 @@
 import Alamofire
 import ObjectMapper
 
-protocol ApiHelperProtocol {
-    static func searchUsers(withName name: String,
-                            successHandler: @escaping ([User]) -> (),
-                            failureHandler: @escaping (NSError) -> ())
-
-    static func searchRepos(withName name: String,
-                            successHandler: @escaping ([Repository]) -> (),
-                            failureHandler: @escaping (NSError) -> ())
-
-    static func starsNumber(ofUser user: User,
-                            successHandler: @escaping (Int) -> (),
-                            failureHandler: @escaping (NSError) -> ())
-
-    static func followersNumber(ofUser user: User,
-                                successHandler: @escaping (Int) -> (),
-                                failureHandler: @escaping (NSError) -> ())
-}
-
 enum ApiHelper: ApiHelperProtocol {
     static func searchUsers(withName name: String,
                             successHandler: @escaping ([User]) -> (),
