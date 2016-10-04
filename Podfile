@@ -1,13 +1,25 @@
 platform :ios, '9.0'
 use_frameworks!
 
-target 'KonradZdunczyk_elpassion' do
+def common_pods_for_target
 
-pod 'RxSwift',    '~> 3.0.0-beta.1'
-pod 'RxCocoa',    '~> 3.0.0-beta.1'
+pod 'RxSwift', '~> 3.0.0-beta.1'
+pod 'RxCocoa', '~> 3.0.0-beta.1'
+pod 'ObjectMapper'
 pod 'Alamofire'
 pod 'AlamofireImage'
-pod 'ObjectMapper'
+
+end
+
+target 'KonradZdunczyk_elpassion' do
+
+common_pods_for_target
+
+end
+
+target 'KonradZdunczyk_elpassionTests' do
+
+common_pods_for_target
 
 end
 
