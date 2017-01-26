@@ -58,7 +58,7 @@ class SearchViewModel {
             .asDriver(onErrorJustReturn: [])
 
         query
-            .observeOn(ConcurrentDispatchQueueScheduler(globalConcurrentQueueQOS: .background))
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .subscribe(onNext: { [unowned self] (queryText) in
                 guard queryText.characters.count > 0 else {
                     self.repos.value = []

@@ -27,6 +27,7 @@ class SearchViewController: UIViewController {
     var rx_searchBarText: Observable<String> {
         return searchBar.rx
             .text
+            .orEmpty
             .throttle(1.0, scheduler: MainScheduler.instance)
             .distinctUntilChanged()
     }
