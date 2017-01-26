@@ -1,4 +1,4 @@
-# KonradZdunczy_elpassion
+# elpassionChallenge
 
 ## Requirements:  
 * Xcode 8  
