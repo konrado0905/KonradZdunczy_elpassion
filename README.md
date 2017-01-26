@@ -5,6 +5,8 @@
 * Swift 3  
 * Cocoapods 1.0 or later
 
+![elpassiongif](https://cloud.githubusercontent.com/assets/6798398/22338785/7d0f4a56-e3e8-11e6-8f13-e9949d1b1cc7.gif)
+
 ## Assignment:
 * Create simple iOS application that uses GitHub API
 * Application should allow to search for users and repositories
